@@ -2309,13 +2309,18 @@ KYTY_RECOMPILER_FUNC(Recompile_Exp_Mrt0OffOffComprVmDone)
 	EXIT_NOT_IMPLEMENTED(inst.src_num > 0);
 
 	// TODO() check VSKIP
-	// TODO() check EXEC
 
 	static const char* text = R"(
+        %exec_z_<index> = OpLoad %uint %execz
+        %exec_nz_<index> = OpIEqual %bool %exec_z_<index> %uint_0
+               OpSelectionMerge %exec_end_<index> None
+               OpBranchConditional %exec_nz_<index> %exec_run_<index> %exec_end_<index>
+%exec_run_<index> = OpLabel
         OpKill
+%exec_end_<index> = OpLabel
 )";
 
-	*dst_source += String8(text);
+	*dst_source += String8(text).ReplaceStr("<index>", String8::FromPrintf("%u", index));
 
 	return true;
 }
@@ -2333,7 +2338,6 @@ KYTY_RECOMPILER_FUNC(Recompile_Exp_Mrt0Vsrc0Vsrc1ComprVmDone)
 	auto src1_value = operand_variable_to_str(inst.src[1]);
 
 	// TODO() check VSKIP
-	// TODO() check EXEC
 
 	static const char* text = R"(
          %t1_<index> = OpLoad %float %<src0> 
@@ -2350,7 +2354,7 @@ KYTY_RECOMPILER_FUNC(Recompile_Exp_Mrt0Vsrc0Vsrc1ComprVmDone)
                OpStore %outColor %t11_<index>
 )";
 
-	*dst_source += String8(text)
+	*dst_source += (String8(EXEC_CHECK_BEGIN) + String8(text) + String8(EXEC_CHECK_END))
 	                   .ReplaceStr("<index>", String8::FromPrintf("%u", index))
 	                   .ReplaceStr("<src0>", src0_value.value)
 	                   .ReplaceStr("<src1>", src1_value.value);
