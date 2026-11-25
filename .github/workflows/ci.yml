@@ -19,7 +19,7 @@ jobs:
     - name: Install WinLibs
       run: choco install winlibs -y --no-progress
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v4
       with:
         arch: win64_mingw81
     - name: Run CMake
