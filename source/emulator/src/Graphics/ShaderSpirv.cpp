@@ -1370,6 +1370,19 @@ constexpr char EXECZ[] = R"(
                OpStore %execz %z196_<index>
 )";
 
+constexpr char EXEC_CHECK_BEGIN[] = R"(
+        %exec_z_<index> = OpLoad %uint %execz
+        %exec_nz_<index> = OpIEqual %bool %exec_z_<index> %uint_0
+               OpSelectionMerge %exec_end_<index> None
+               OpBranchConditional %exec_nz_<index> %exec_run_<index> %exec_end_<index>
+%exec_run_<index> = OpLabel
+)";
+
+constexpr char EXEC_CHECK_END[] = R"(
+               OpBranch %exec_end_<index>
+%exec_end_<index> = OpLabel
+)";
+
 constexpr char SCC_NZ_1[] = R"(
         %snz1_118_<index> = OpLoad %uint %<dst>
         %snz1_121_<index> = OpINotEqual %bool %snz1_118_<index> %uint_0
@@ -1897,7 +1910,6 @@ KYTY_RECOMPILER_FUNC(Recompile_BufferLoadDword_Vdata1VaddrSvSoffsIdxen)
 		// EXIT_NOT_IMPLEMENTED(src1_value3.type != SpirvType::Uint);
 
 		// TODO() check VSKIP
-		// TODO() check EXEC
 
 		static const char* text = R"(
         %t100_<index> = OpLoad %float %<src0>
@@ -1919,7 +1931,7 @@ KYTY_RECOMPILER_FUNC(Recompile_BufferLoadDword_Vdata1VaddrSvSoffsIdxen)
         ;       OpStore %temp_int_5 %t211_<index>
         %t110_<index> = OpFunctionCall %void %buffer_load_float1 %<p0> %temp_int_1 %temp_int_2 %temp_int_3 %temp_int_4 
 )";
-		*dst_source += String8(text)
+		*dst_source += (String8(EXEC_CHECK_BEGIN) + String8(text) + String8(EXEC_CHECK_END))
 		                   .ReplaceStr("<index>", String8::FromPrintf("%u", index))
 		                   .ReplaceStr("<src0>", src0_value.value)
 		                   .ReplaceStr("<offset>", offset)
