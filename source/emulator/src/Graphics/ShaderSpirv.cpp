@@ -1971,7 +1971,6 @@ KYTY_RECOMPILER_FUNC(Recompile_BufferLoadFormatX_Vdata1VaddrSvSoffsIdxen)
 		EXIT_NOT_IMPLEMENTED(src1_value3.type != SpirvType::Uint);
 
 		// TODO() check VSKIP
-		// TODO() check EXEC
 
 		static const char* text = R"(
         %t100_<index> = OpLoad %float %<src0>
@@ -1993,7 +1992,7 @@ KYTY_RECOMPILER_FUNC(Recompile_BufferLoadFormatX_Vdata1VaddrSvSoffsIdxen)
                OpStore %temp_int_5 %t211_<index>
         %t110_<index> = OpFunctionCall %void %tbuffer_load_format_x %<p0> %temp_int_1 %temp_int_2 %temp_int_3 %temp_int_4 %temp_int_5 
 )";
-		*dst_source += String8(text)
+		*dst_source += (String8(EXEC_CHECK_BEGIN) + String8(text) + String8(EXEC_CHECK_END))
 		                   .ReplaceStr("<index>", String8::FromPrintf("%u", index))
 		                   .ReplaceStr("<src0>", src0_value.value)
 		                   .ReplaceStr("<offset>", offset)
