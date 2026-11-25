@@ -2232,7 +2232,6 @@ KYTY_RECOMPILER_FUNC(Recompile_DsAppend_VdstGds)
 		EXIT_NOT_IMPLEMENTED(dst_value.type != SpirvType::Float);
 
 		// TODO() check VSKIP
-		// TODO() check EXEC
 
 		static const char* text = R"(
         %t192_<index> = OpLoad %uint %m0
@@ -2243,7 +2242,9 @@ KYTY_RECOMPILER_FUNC(Recompile_DsAppend_VdstGds)
                OpStore %<dst> %t199_<index>
                OpMemoryBarrier %uint_1 %uint_72
 )";
-		*dst_source += String8(text).ReplaceStr("<dst>", dst_value.value).ReplaceStr("<index>", index_str);
+		*dst_source += (String8(EXEC_CHECK_BEGIN) + String8(text) + String8(EXEC_CHECK_END))
+		                   .ReplaceStr("<dst>", dst_value.value)
+		                   .ReplaceStr("<index>", index_str);
 
 		return true;
 	}
@@ -2267,7 +2268,6 @@ KYTY_RECOMPILER_FUNC(Recompile_DsConsume_VdstGds)
 		EXIT_NOT_IMPLEMENTED(dst_value.type != SpirvType::Float);
 
 		// TODO() check VSKIP
-		// TODO() check EXEC
 
 		static const char* text = R"(
         %t192_<index> = OpLoad %uint %m0
@@ -2278,7 +2278,9 @@ KYTY_RECOMPILER_FUNC(Recompile_DsConsume_VdstGds)
                OpStore %<dst> %t199_<index>
                OpMemoryBarrier %uint_1 %uint_72
 )";
-		*dst_source += String8(text).ReplaceStr("<dst>", dst_value.value).ReplaceStr("<index>", index_str);
+		*dst_source += (String8(EXEC_CHECK_BEGIN) + String8(text) + String8(EXEC_CHECK_END))
+		                   .ReplaceStr("<dst>", dst_value.value)
+		                   .ReplaceStr("<index>", index_str);
 
 		return true;
 	}
