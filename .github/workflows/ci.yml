@@ -35,7 +35,7 @@ jobs:
       shell: cmd
     - name: Copy Qt dependency DLLs
       run: |
-        $src = Resolve-Path "${env:Qt5_DIR}\bin"
+        $src = Resolve-Path "${env:Qt5_DIR}\..\..\bin"
         $dest = "_Build\_Gcc\_bin"
 
         Copy-Item "${src}\libwinpthread-1.dll" -Destination $dest
