@@ -1785,7 +1785,10 @@ uint64_t SamplerCache::GetSamplerId(const ShaderSamplerResource& r)
 			case 2: aniso_ratio = 4.0f; break;
 			case 3: aniso_ratio = 8.0f; break;
 			case 4: aniso_ratio = 16.0f; break;
-			default: EXIT("unknown ratio: %d\n", static_cast<int>(r.MaxAnisoRatio()));
+			default:
+				printf("unknown ratio: %d\n", static_cast<int>(r.MaxAnisoRatio()));
+				aniso_ratio = 16.0f;
+				break;
 		}
 	}
 
@@ -1808,7 +1811,9 @@ uint64_t SamplerCache::GetSamplerId(const ShaderSamplerResource& r)
 			case 1: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT; break;
 			case 2: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE; break;
 			case 6: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER; break;
-			default: EXIT("unknown clamp: %u\n", clamp);
+			default:
+				printf("unknown clamp: %u\n", clamp);
+				return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 		}
 		return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
 	};
@@ -1819,7 +1824,10 @@ uint64_t SamplerCache::GetSamplerId(const ShaderSamplerResource& r)
 		case 0: border = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK; break;
 		case 1: border = VK_BORDER_COLOR_INT_OPAQUE_BLACK; break;
 		case 2: border = VK_BORDER_COLOR_INT_OPAQUE_WHITE; break;
-		default: EXIT("unknown border color: %d", static_cast<int>(r.BorderColorType()));
+		default:
+			printf("unknown border color: %d\n", static_cast<int>(r.BorderColorType()));
+			border = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+			break;
 	}
 
 	sampler_info.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
